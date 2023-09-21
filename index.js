@@ -60,12 +60,24 @@ client.on(Events.InteractionCreate, async (interaction) => {
     }
 });
 
-const homeworkReminder = schedule.scheduleJob('0 22 * * 6', () => {
+const homeworkRecurrenceRule = new schedule.RecurrenceRule();
+homeworkRecurrenceRule.minute = 0;
+homeworkRecurrenceRule.hour = 22;
+homeworkRecurrenceRule.dayOfWeek = 6;
+homeworkRecurrenceRule.tz = 'America/New_York';
+
+const homeworkReminder = schedule.scheduleJob(homeworkRecurrenceRule, () => {
     const channel = client.channels.cache.get(Bun.env.channelId);
-    channel.send(`<@&${Bun.env.roleId}> You have 2 hrs until the HW deadline!`);
+    channel.send(`<@&${Bun.env.remindRoleId}> You have 2 hrs until the HW deadline!`);
 });
 
-const classReminder = schedule.scheduleJob('45 19 * * 4', () => {
+const classRecurrenceRule = new schedule.RecurrenceRule();
+classRecurrenceRule.minute = 45;
+classRecurrenceRule.hour = 19;
+classRecurrenceRule.dayOfWeek = 4;
+classRecurrenceRule.tz = 'America/New_York';
+
+const classReminder = schedule.scheduleJob(classRecurrenceRule, () => {
     const channel = client.channels.cache.get(Bun.env.channelId);
-    channel.send('Class is in 15 minutes!');
+    channel.send(`<@&${Bun.env.studentRoleId}> Class begins in 15 minutes!`);
 });
